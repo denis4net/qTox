@@ -1,6 +1,8 @@
 <RCC>
     <qresource prefix="/conf">
         <file alias="settings.ini">res/settings.ini</file>
+        <file>img/vpn_button.png</file>
+        <file>img/vpn.png</file>
     </qresource>
     <qresource prefix="/font">
         <file alias="DejaVuSans.ttf">res/DejaVuSans.ttf</file>

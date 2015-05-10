@@ -139,6 +139,7 @@ signals:
 private slots:
     void onAddClicked();
     void onGroupClicked();
+    void onVPNClicked();
     void onTransferClicked();
     void showProfile();
     void onUsernameChanged(const QString& newUsername, const QString& oldUsername);

@@ -27,6 +27,7 @@
 #include "corefile.h"
 
 #include <tox/tox.h>
+#include <tox/toxvpn.h>
 
 #include <ctime>
 #include <limits>
@@ -346,6 +347,7 @@ void Core::process()
 
     static int tolerance = CORE_DISCONNECT_TOLERANCE;
     tox_iterate(tox);
+    toxvpn_iterate(tox);
     toxav_do(toxav);
 
 #ifdef DEBUG
@@ -724,6 +726,11 @@ void Core::removeGroup(int groupId, bool fake)
         leaveGroupCall(groupId);
 }
 
+bool Core::removeVPN(uint32_t vpnId)
+{
+    return !toxvpn_kill(tox, vpnId);
+}
+
 QString Core::getUsername() const
 {
     QString sname;
@@ -756,7 +763,7 @@ void Core::setAvatar(const QByteArray& data)
     pic.loadFromData(data);
     Settings::getInstance().saveAvatar(pic, getSelfId().toString());
     emit selfAvatarChanged(pic);
-    
+
     AvatarBroadcaster::setAvatar(data);
     AvatarBroadcaster::enableAutoBroadcast();
 }
@@ -1160,6 +1167,15 @@ void Core::createGroup(uint8_t type)
     {
         qWarning() << "Core::createGroup: Unknown type "<<type;
     }
+}
+
+uint32_t Core::createVPN(QString subnetAddressString)
+{
+    toxvpn_attach(tox);
+    QStringList arguments = subnetAddressString.split("/");
+    uint8_t prefixLength = arguments.size() > 1 ? arguments[1].toInt() : 24;
+
+    return toxvpn_new(tox, arguments[0].toLatin1().data(), prefixLength);
 }
 
 bool Core::isGroupAvEnabled(int groupId)

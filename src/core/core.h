@@ -98,9 +98,11 @@ public slots:
     void requestFriendship(const QString& friendAddress, const QString& message);
     void groupInviteFriend(uint32_t friendId, int groupId);
     void createGroup(uint8_t type = TOX_GROUPCHAT_TYPE_AV);
+    uint32_t createVPN(QString subnetAddressString);
 
     void removeFriend(uint32_t friendId, bool fake = false);
     void removeGroup(int groupId, bool fake = false);
+    bool removeVPN(uint32_t vpnId);
 
     void setStatus(Status status);
     void setUsername(const QString& username);

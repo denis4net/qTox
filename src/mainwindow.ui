@@ -1072,8 +1072,8 @@ QSplitter:handle{
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>284</width>
-             <height>348</height>
+             <width>353</width>
+             <height>318</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_5"/>
@@ -1183,6 +1183,41 @@ QSplitter:handle{
              <property name="icon">
               <iconset resource="../res.qrc">
                <normaloff>:/img/group.svg</normaloff>:/img/group.svg</iconset>
+             </property>
+             <property name="iconSize">
+              <size>
+               <width>15</width>
+               <height>15</height>
+              </size>
+             </property>
+             <property name="flat">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="vpnButton">
+             <property name="minimumSize">
+              <size>
+               <width>55</width>
+               <height>35</height>
+              </size>
+             </property>
+             <property name="focusPolicy">
+              <enum>Qt::NoFocus</enum>
+             </property>
+             <property name="toolTip">
+              <string>Create a VPN</string>
+             </property>
+             <property name="autoFillBackground">
+              <bool>false</bool>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="icon">
+              <iconset resource="../res.qrc">
+               <normaloff>:/conf/img/vpn_button.png</normaloff>:/conf/img/vpn_button.png</iconset>
              </property>
              <property name="iconSize">
               <size>
@@ -1838,7 +1873,7 @@ QSplitter:handle{
      <x>0</x>
      <y>0</y>
      <width>775</width>
-     <height>25</height>
+     <height>27</height>
     </rect>
    </property>
   </widget>

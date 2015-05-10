@@ -39,6 +39,7 @@
 #include "src/nexus.h"
 #include "src/widget/gui.h"
 #include "src/offlinemsgengine.h"
+#include "src/widget/form/createvpndialog.h"
 #include <cassert>
 #include <QMessageBox>
 #include <QDebug>
@@ -192,6 +193,7 @@ void Widget::init()
     connect(core, SIGNAL(selfAvatarChanged(QPixmap)), profileForm, SLOT(onSelfAvatarLoaded(QPixmap)));
     connect(ui->addButton, SIGNAL(clicked()), this, SLOT(onAddClicked()));
     connect(ui->groupButton, SIGNAL(clicked()), this, SLOT(onGroupClicked()));
+    connect(ui->vpnButton, SIGNAL(clicked()), this, SLOT(onVPNClicked()));
     connect(ui->transferButton, SIGNAL(clicked()), this, SLOT(onTransferClicked()));
     connect(ui->settingsButton, SIGNAL(clicked()), this, SLOT(onSettingsClicked()));
     connect(profilePicture, &MaskablePixmapWidget::clicked, this, &Widget::showProfile);
@@ -453,6 +455,19 @@ void Widget::onAddClicked()
 void Widget::onGroupClicked()
 {
     Nexus::getCore()->createGroup();
+}
+
+void Widget::onVPNClicked()
+{
+    CreateVPNDialog dialog;
+    if (dialog.exec() == QDialog::Accepted)
+    {
+        uint32_t id = Nexus::getCore()->createVPN(dialog.getSubnetString());
+
+        if (id == UINT32_MAX) {
+            QMessageBox::warning(this, tr("VPN"), tr("Can't create a virtual private network. See details in logs."));
+        }
+    }
 }
 
 void Widget::onTransferClicked()
@@ -860,27 +875,27 @@ void Widget::onFriendRequestReceived(const QString& userId, const QString& messa
 }
 
 void Widget::removeFriend(Friend* f, bool fake)
-{    
+{
     QMessageBox::StandardButton removeFriendMB;
     removeFriendMB = QMessageBox::question(0,
                                 tr("Remove history"),
-                                tr("Do you want to remove history as well?"), 
+                                tr("Do you want to remove history as well?"),
                                 QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
     if (removeFriendMB == QMessageBox::Cancel)
            return;
     else if (removeFriendMB == QMessageBox::Yes)
         HistoryKeeper::getInstance()->removeFriendHistory(f->getToxID().publicKey);
-        
+
     f->getFriendWidget()->setAsInactiveChatroom();
     if (static_cast<GenericChatroomWidget*>(f->getFriendWidget()) == activeChatroomWidget)
     {
         activeChatroomWidget = nullptr;
         onAddClicked();
     }
-    
+
     FriendList::removeFriend(f->getFriendID(), fake);
     Nexus::getCore()->removeFriend(f->getFriendID(), fake);
-    
+
     delete f;
     if (ui->mainHead->layout()->isEmpty())
         onAddClicked();

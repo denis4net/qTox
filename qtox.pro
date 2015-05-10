@@ -35,8 +35,9 @@ FORMS    += \
     src/widget/form/setpassworddialog.ui \
     src/chatlog/content/filetransferwidget.ui \
     src/widget/form/settings/advancedsettings.ui \
-    src/android.ui
-    
+    src/android.ui \
+    src/widget/form/createvpndialog.ui
+
 CONFIG   += c++11
 
 # Rules for creating/updating {ts|qm}-files
@@ -106,9 +107,9 @@ contains(HIGH_DPI, YES) {
 }
 
 contains(JENKINS,YES) {
-	INCLUDEPATH += ./libs/include/
+        INCLUDEPATH += ./libs/include/
 } else {
-	INCLUDEPATH += libs/include
+        INCLUDEPATH += libs/include
 }
 
 contains(DEFINES, QTOX_FILTER_AUDIO) {
@@ -131,7 +132,7 @@ contains(DEFINES, QTOX_PLATFORM_EXT) {
 # Rules for Windows, Mac OSX, and Linux
 win32 {
     RC_FILE = windows/qtox.rc
-	LIBS += -L$$PWD/libs/lib -ltoxav -ltoxcore -ltoxencryptsave -ltoxdns -lsodium -lvpx -lpthread
+        LIBS += -L$$PWD/libs/lib -ltoxav -ltoxcore -ltoxencryptsave -ltoxdns -lsodium -lvpx -lpthread
     LIBS += -L$$PWD/libs/lib -lopencv_core249 -lopencv_highgui249 -lopencv_imgproc249 -lOpenAL32 -lopus
     LIBS += -lopengl32 -lole32 -loleaut32 -luuid -lvfw32 -lws2_32 -liphlpapi -lz
     LIBS += -lqrencode
@@ -163,8 +164,10 @@ win32 {
             contains(STATICPKG, YES) {
                 target.path = /usr/bin
                 INSTALLS += target
-                LIBS += -L$$PWD/libs/lib/ -lopus -lvpx -lopenal -Wl,-Bstatic -ltoxcore -ltoxav -ltoxencryptsave -ltoxdns -lsodium -lopencv_highgui -lopencv_imgproc -lopencv_core -lz -Wl,-Bdynamic
-                LIBS += -Wl,-Bstatic -ljpeg -ltiff -lpng -ljasper -lIlmImf -lIlmThread -lIex -ldc1394 -lraw1394 -lHalf -lz -llzma -ljbig
+                LIBS += -L$$PWD/libs/lib/ -lopus -lvpx -lopenal -Wl,-Bstatic -ltoxcore -ltoxvpn -ltoxav -ltoxencryptsave -ltoxdns -lsodium
+                LIBS += -Wl,-Bdynamic -lopencv_highgui -lopencv_imgproc -lopencv_core -lz -Wl,-Bdynamic
+                LIBS += -Wl,-Bdynamic -ljpeg -ltiff -lpng -ljasper -lIlmImf -lIlmThread -lIex -ldc1394 -lraw1394 -lHalf -lz -llzma
+                LIBS += -Wl,-Bstatic -ljbig
                 LIBS += -Wl,-Bdynamic -lv4l1 -lv4l2 -lavformat -lavcodec -lavutil -lswscale -lusb-1.0
                 LIBS += -lqrencode
             } else {
@@ -172,13 +175,15 @@ win32 {
                 LIBS += -lqrencode
             }
 
+            LIBS += -lcap -lnl-3 -lnl-route-3
+
             contains(DEFINES, QTOX_PLATFORM_EXT) {
                 LIBS += -lX11 -lXss
             }
 
             contains(DEFINES, QTOX_FILTER_AUDIO) {
                 contains(STATICPKG, YES) {
-                    LIBS += -Wl,-Bstatic -lfilteraudio
+                    LIBS += -Wl,-Bstatic -lfilteraudio -Wl,-Bdynamic
                 } else {
                     LIBS += -lfilteraudio
                 }
@@ -198,26 +203,26 @@ win32 {
 # The systray Unity backend implements the system tray icon on Unity (Ubuntu) and GNOME desktops.
 unix:!macx:!android {
 contains(ENABLE_SYSTRAY_UNITY_BACKEND, YES) {
-	DEFINES += ENABLE_SYSTRAY_UNITY_BACKEND
+        DEFINES += ENABLE_SYSTRAY_UNITY_BACKEND
 
-	INCLUDEPATH += "/usr/include/glib-2.0"
-	INCLUDEPATH += "/usr/lib/glib-2.0/include"
-	INCLUDEPATH += "/usr/lib64/glib-2.0/include"
-	INCLUDEPATH += "/usr/lib/i386-linux-gnu/glib-2.0/include"
-	INCLUDEPATH += "/usr/lib/x86_64-linux-gnu/glib-2.0/include"
-	INCLUDEPATH += "/usr/include/gtk-2.0"
-	INCLUDEPATH += "/usr/lib/gtk-2.0/include"
-	INCLUDEPATH += "/usr/lib64/gtk-2.0/include"
-	INCLUDEPATH += "/usr/lib/i386-linux-gnu/gtk-2.0/include"
-	INCLUDEPATH += "/usr/lib/x86_64-linux-gnu/gtk-2.0/include"
-	INCLUDEPATH += "/usr/include/atk-1.0"
-	INCLUDEPATH += "/usr/include/cairo"
-	INCLUDEPATH += "/usr/include/gdk-pixbuf-2.0"
-	INCLUDEPATH += "/usr/include/libappindicator-0.1"
-	INCLUDEPATH += "/usr/include/libdbusmenu-glib-0.4"
-	INCLUDEPATH += "/usr/include/pango-1.0"
+        INCLUDEPATH += "/usr/include/glib-2.0"
+        INCLUDEPATH += "/usr/lib/glib-2.0/include"
+        INCLUDEPATH += "/usr/lib64/glib-2.0/include"
+        INCLUDEPATH += "/usr/lib/i386-linux-gnu/glib-2.0/include"
+        INCLUDEPATH += "/usr/lib/x86_64-linux-gnu/glib-2.0/include"
+        INCLUDEPATH += "/usr/include/gtk-2.0"
+        INCLUDEPATH += "/usr/lib/gtk-2.0/include"
+        INCLUDEPATH += "/usr/lib64/gtk-2.0/include"
+        INCLUDEPATH += "/usr/lib/i386-linux-gnu/gtk-2.0/include"
+        INCLUDEPATH += "/usr/lib/x86_64-linux-gnu/gtk-2.0/include"
+        INCLUDEPATH += "/usr/include/atk-1.0"
+        INCLUDEPATH += "/usr/include/cairo"
+        INCLUDEPATH += "/usr/include/gdk-pixbuf-2.0"
+        INCLUDEPATH += "/usr/include/libappindicator-0.1"
+        INCLUDEPATH += "/usr/include/libdbusmenu-glib-0.4"
+        INCLUDEPATH += "/usr/include/pango-1.0"
 
-	LIBS += -lgobject-2.0 -lappindicator -lgtk-x11-2.0
+        LIBS += -lgobject-2.0 -lappindicator -lgtk-x11-2.0
 }
 }
 
@@ -225,25 +230,25 @@ contains(ENABLE_SYSTRAY_UNITY_BACKEND, YES) {
 unix:!macx:!android {
 contains(ENABLE_SYSTRAY_STATUSNOTIFIER_BACKEND, NO) {
 } else {
-	DEFINES += ENABLE_SYSTRAY_STATUSNOTIFIER_BACKEND
+        DEFINES += ENABLE_SYSTRAY_STATUSNOTIFIER_BACKEND
 
-	INCLUDEPATH += "/usr/include/glib-2.0"
-	INCLUDEPATH += "/usr/lib/glib-2.0/include"
-	INCLUDEPATH += "/usr/lib64/glib-2.0/include"
-	INCLUDEPATH += "/usr/lib/i386-linux-gnu/glib-2.0/include"
-	INCLUDEPATH += "/usr/lib/x86_64-linux-gnu/glib-2.0/include"
-	INCLUDEPATH += "/usr/include/gtk-2.0"
-	INCLUDEPATH += "/usr/lib/gtk-2.0/include"
-	INCLUDEPATH += "/usr/lib64/gtk-2.0/include"
-	INCLUDEPATH += "/usr/lib/i386-linux-gnu/gtk-2.0/include"
-	INCLUDEPATH += "/usr/lib/x86_64-linux-gnu/gtk-2.0/include"
-	INCLUDEPATH += "/usr/include/atk-1.0"
-	INCLUDEPATH += "/usr/include/cairo"
-	INCLUDEPATH += "/usr/include/gdk-pixbuf-2.0"
-	INCLUDEPATH += "/usr/include/pango-1.0"
+        INCLUDEPATH += "/usr/include/glib-2.0"
+        INCLUDEPATH += "/usr/lib/glib-2.0/include"
+        INCLUDEPATH += "/usr/lib64/glib-2.0/include"
+        INCLUDEPATH += "/usr/lib/i386-linux-gnu/glib-2.0/include"
+        INCLUDEPATH += "/usr/lib/x86_64-linux-gnu/glib-2.0/include"
+        INCLUDEPATH += "/usr/include/gtk-2.0"
+        INCLUDEPATH += "/usr/lib/gtk-2.0/include"
+        INCLUDEPATH += "/usr/lib64/gtk-2.0/include"
+        INCLUDEPATH += "/usr/lib/i386-linux-gnu/gtk-2.0/include"
+        INCLUDEPATH += "/usr/lib/x86_64-linux-gnu/gtk-2.0/include"
+        INCLUDEPATH += "/usr/include/atk-1.0"
+        INCLUDEPATH += "/usr/include/cairo"
+        INCLUDEPATH += "/usr/include/gdk-pixbuf-2.0"
+        INCLUDEPATH += "/usr/include/pango-1.0"
 
 
-	LIBS += -lglib-2.0 -lgdk_pixbuf-2.0 -lgio-2.0 -lcairo -lgtk-x11-2.0 -lgdk-x11-2.0 -lgobject-2.0
+        LIBS += -lglib-2.0 -lgdk_pixbuf-2.0 -lgio-2.0 -lcairo -lgtk-x11-2.0 -lgdk-x11-2.0 -lgobject-2.0
 
     SOURCES +=     src/platform/statusnotifier/closures.c \
     src/platform/statusnotifier/enums.c \
@@ -260,25 +265,25 @@ contains(ENABLE_SYSTRAY_STATUSNOTIFIER_BACKEND, NO) {
 unix:!macx:!android {
 contains(ENABLE_SYSTRAY_GTK_BACKEND, NO) {
 } else {
-	DEFINES += ENABLE_SYSTRAY_GTK_BACKEND
+        DEFINES += ENABLE_SYSTRAY_GTK_BACKEND
 
-	INCLUDEPATH += "/usr/include/glib-2.0"
-	INCLUDEPATH += "/usr/lib/glib-2.0/include"
-	INCLUDEPATH += "/usr/lib64/glib-2.0/include"
-	INCLUDEPATH += "/usr/lib/i386-linux-gnu/glib-2.0/include"
-	INCLUDEPATH += "/usr/lib/x86_64-linux-gnu/glib-2.0/include"
-	INCLUDEPATH += "/usr/include/gtk-2.0"
-	INCLUDEPATH += "/usr/lib/gtk-2.0/include"
-	INCLUDEPATH += "/usr/lib64/gtk-2.0/include"
-	INCLUDEPATH += "/usr/lib/i386-linux-gnu/gtk-2.0/include"
-	INCLUDEPATH += "/usr/lib/x86_64-linux-gnu/gtk-2.0/include"
-	INCLUDEPATH += "/usr/include/atk-1.0"
-	INCLUDEPATH += "/usr/include/gdk-pixbuf-2.0"
-	INCLUDEPATH += "/usr/include/cairo"
-	INCLUDEPATH += "/usr/include/pango-1.0"
+        INCLUDEPATH += "/usr/include/glib-2.0"
+        INCLUDEPATH += "/usr/lib/glib-2.0/include"
+        INCLUDEPATH += "/usr/lib64/glib-2.0/include"
+        INCLUDEPATH += "/usr/lib/i386-linux-gnu/glib-2.0/include"
+        INCLUDEPATH += "/usr/lib/x86_64-linux-gnu/glib-2.0/include"
+        INCLUDEPATH += "/usr/include/gtk-2.0"
+        INCLUDEPATH += "/usr/lib/gtk-2.0/include"
+        INCLUDEPATH += "/usr/lib64/gtk-2.0/include"
+        INCLUDEPATH += "/usr/lib/i386-linux-gnu/gtk-2.0/include"
+        INCLUDEPATH += "/usr/lib/x86_64-linux-gnu/gtk-2.0/include"
+        INCLUDEPATH += "/usr/include/atk-1.0"
+        INCLUDEPATH += "/usr/include/gdk-pixbuf-2.0"
+        INCLUDEPATH += "/usr/include/cairo"
+        INCLUDEPATH += "/usr/include/pango-1.0"
 
 
-	LIBS += -lglib-2.0 -lgdk_pixbuf-2.0 -lgio-2.0 -lcairo -lgtk-x11-2.0 -lgdk-x11-2.0 -lgobject-2.0
+        LIBS += -lglib-2.0 -lgdk_pixbuf-2.0 -lgio-2.0 -lcairo -lgtk-x11-2.0 -lgdk-x11-2.0 -lgobject-2.0
 }
 }
 
@@ -437,7 +442,8 @@ SOURCES += \
     src/widget/tool/screengrabberchooserrectitem.cpp \
     src/widget/tool/screengrabberoverlayitem.cpp \
     src/widget/tool/toolboxgraphicsitem.cpp \
-    src/widget/tool/flyoutoverlaywidget.cpp
+    src/widget/tool/flyoutoverlaywidget.cpp \
+    src/widget/form/createvpndialog.cpp
 
 
 HEADERS += \
@@ -468,4 +474,5 @@ HEADERS += \
     src/widget/tool/screengrabberchooserrectitem.h \
     src/widget/tool/screengrabberoverlayitem.h \
     src/widget/tool/toolboxgraphicsitem.h \
-    src/widget/tool/flyoutoverlaywidget.h
+    src/widget/tool/flyoutoverlaywidget.h \
+    src/widget/form/createvpndialog.h
