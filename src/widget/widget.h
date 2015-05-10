@@ -26,7 +26,7 @@
 #include "form/profileform.h"
 #include "form/filesform.h"
 #include "src/core/corestructs.h"
-
+#include "src/vpnlist.h"
 #define PIXELS_TO_ACT 7
 
 namespace Ui {
@@ -170,6 +170,7 @@ private:
         SettingButton,
         None,
     };
+    void updateVPN();
     void setActiveToolMenuButton(ActiveToolMenuButton newActiveButton);
     void hideMainForms();
     virtual bool event(QEvent * e);
@@ -206,6 +207,8 @@ private:
     bool eventFlag;
     bool eventIcon;
     bool wasMaximized = false;
+
+    std::shared_ptr<VPNList> vpnList;
 };
 
 bool toxActivateEventHandler(const QByteArray& data);

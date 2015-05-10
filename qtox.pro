@@ -443,7 +443,8 @@ SOURCES += \
     src/widget/tool/screengrabberoverlayitem.cpp \
     src/widget/tool/toolboxgraphicsitem.cpp \
     src/widget/tool/flyoutoverlaywidget.cpp \
-    src/widget/form/createvpndialog.cpp
+    src/widget/form/createvpndialog.cpp \
+    src/vpnlist.cpp
 
 
 HEADERS += \
@@ -475,4 +476,5 @@ HEADERS += \
     src/widget/tool/screengrabberoverlayitem.h \
     src/widget/tool/toolboxgraphicsitem.h \
     src/widget/tool/flyoutoverlaywidget.h \
-    src/widget/form/createvpndialog.h
+    src/widget/form/createvpndialog.h \
+    src/vpnlist.h

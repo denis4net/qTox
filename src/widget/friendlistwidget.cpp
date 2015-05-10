@@ -33,6 +33,10 @@ FriendListWidget::FriendListWidget(QWidget *parent, bool groupchatPosition) :
     groupLayout->setSpacing(0);
     groupLayout->setMargin(0);
 
+    vpnLayout = new QVBoxLayout();
+    vpnLayout->setSpacing(0);
+    vpnLayout->setMargin(0);
+
     for (Status s : {Status::Online, Status::Offline})
     {
         QVBoxLayout *l = new QVBoxLayout();
@@ -47,12 +51,14 @@ FriendListWidget::FriendListWidget(QWidget *parent, bool groupchatPosition) :
         mainLayout->addLayout(groupLayout, 0, 0);
         mainLayout->addLayout(layouts[static_cast<int>(Status::Online)], 1, 0);
         mainLayout->addLayout(layouts[static_cast<int>(Status::Offline)], 2, 0);
+        mainLayout->addLayout(vpnLayout, 3, 0);
     }
     else
     {
         mainLayout->addLayout(layouts[static_cast<int>(Status::Online)], 0, 0);
         mainLayout->addLayout(groupLayout, 1, 0);
         mainLayout->addLayout(layouts[static_cast<int>(Status::Offline)], 2, 0);
+        mainLayout->addLayout(vpnLayout, 3, 0);
     }
 }
 
@@ -69,6 +75,11 @@ QVBoxLayout* FriendListWidget::getFriendLayout(Status s)
 
     //qDebug() << "Friend Status: " << static_cast<int>(s) << " not found!";
     return layouts[static_cast<int>(Status::Online)];
+}
+
+QVBoxLayout *FriendListWidget::getVPNLayout()
+{
+    return vpnLayout;
 }
 
 void FriendListWidget::onGroupchatPositionChanged(bool top)

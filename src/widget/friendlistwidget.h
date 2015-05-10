@@ -34,6 +34,7 @@ public:
     explicit FriendListWidget(QWidget *parent = 0, bool groupchatPosition = true);
     QVBoxLayout* getGroupLayout();
     QVBoxLayout* getFriendLayout(Status s);
+    QVBoxLayout* getVPNLayout();
 
     QList<GenericChatroomWidget*> getAllFriends();
 
@@ -46,6 +47,7 @@ public slots:
 private:
     QHash<int, QVBoxLayout*> layouts;
     QVBoxLayout *groupLayout;
+    QVBoxLayout *vpnLayout;
     QGridLayout *mainLayout;
 };
 

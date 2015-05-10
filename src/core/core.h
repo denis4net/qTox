@@ -85,6 +85,11 @@ public:
 
     void resetCallSources(); ///< Forces to regenerate each call's audio sources
 
+    QVector<uint32_t> getVPNList() const;
+    QString getVPN_IP(uint32_t toxvpnId) const;
+    QString getVPNName(uint32_t toxvpnId) const;
+    QVector<uint32_t> getVPNFriendsList(uint32_t toxvpnId) const;
+    QString getVPNFriendIP(uint32_t toxvpnId, uint32_t friendId) const;
 public slots:
     void start(); ///< Initializes the core, must be called before anything else
     void process(); ///< Processes toxcore events and ensure we stay connected, called by its own timer

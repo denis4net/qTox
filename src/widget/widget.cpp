@@ -91,6 +91,7 @@ Widget::Widget(QWidget *parent)
     installEventFilter(this);
     translator = new QTranslator;
     setTranslation();
+    vpnList.reset(new VPNList());
 }
 
 void Widget::init()
@@ -394,6 +395,8 @@ void Widget::onConnected()
         emit statusSet(Status::Online);
     else
         emit statusSet(beforeDisconnect);
+
+    updateVPN();
 }
 
 void Widget::onDisconnected()
@@ -468,6 +471,8 @@ void Widget::onVPNClicked()
             QMessageBox::warning(this, tr("VPN"), tr("Can't create a virtual private network. See details in logs."));
         }
     }
+
+    updateVPN();
 }
 
 void Widget::onTransferClicked()
@@ -1482,6 +1487,17 @@ void Widget::hideGroups(QString searchString, bool hideAll)
             groupWidget->setVisible(false);
         else
             groupWidget->setVisible(true);
+    }
+}
+
+void Widget::updateVPN()
+{
+    vpnList->update();
+    QVBoxLayout* vpnLayout = contactListWidget->getVPNLayout();
+
+    for (const VPNEntry &entry: *vpnList)
+    {
+        vpnLayout->addWidget(new QLabel(entry.getIP()));
     }
 }
 

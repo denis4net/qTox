@@ -1065,6 +1065,39 @@ QVector<uint32_t> Core::getFriendList() const
     return friends;
 }
 
+QVector<uint32_t> Core::getVPNList() const
+{
+    size_t size = toxvpn_get_list_size(tox);
+    QVector<uint32_t> list(size);
+    if (size > 0)
+        toxvpn_get_list(tox, &list[0]);
+    return list;
+}
+
+QVector<uint32_t> Core::getVPNFriendsList(uint32_t toxvpnId) const
+{
+    const size_t size = toxvpn_friend_get_list_size(tox, toxvpnId);
+    QVector<uint32_t> list(size);
+    if (size > 0)
+        toxvpn_friend_get_list(tox, toxvpnId, &list[0]);
+    return list;
+}
+
+QString Core::getVPN_IP(uint32_t toxvpnId) const
+{
+    return QString(toxvpn_self_get_ip(tox, toxvpnId));
+}
+
+QString Core::getVPNName(uint32_t toxvpnId) const
+{
+    return QString(toxvpn_self_get_name(tox, toxvpnId));
+}
+
+QString Core::getVPNFriendIP(uint32_t toxvpnId, uint32_t friendId) const
+{
+    return QString(toxvpn_friend_get_ip(tox, toxvpnId, friendId));
+}
+
 int Core::getGroupNumberPeers(int groupId) const
 {
     return tox_group_number_peers(tox, groupId);
