@@ -164,12 +164,12 @@ win32 {
             contains(STATICPKG, YES) {
                 target.path = /usr/bin
                 INSTALLS += target
-                LIBS += -L$$PWD/libs/lib/ -lopus -lvpx -lopenal -Wl,-Bstatic -ltoxcore -ltoxvpn -ltoxav -ltoxencryptsave -ltoxdns -lsodium
+                LIBS += -L$$PWD/libs/lib/ -lvpx -lopenal -Wl,-Bstatic -ltoxcore -ltoxvpn -ltoxav -ltoxencryptsave -ltoxdns -lsodium
                 LIBS += -Wl,-Bdynamic -lopencv_highgui -lopencv_imgproc -lopencv_core -lz -Wl,-Bdynamic
                 LIBS += -Wl,-Bdynamic -ljpeg -ltiff -lpng -ljasper -lIlmImf -lIlmThread -lIex -ldc1394 -lraw1394 -lHalf -lz -llzma
-                LIBS += -Wl,-Bstatic -ljbig
+                LIBS += -Wl,-Bstatic -ljbig -ljansson
                 LIBS += -Wl,-Bdynamic -lv4l1 -lv4l2 -lavformat -lavcodec -lavutil -lswscale -lusb-1.0
-                LIBS += -lqrencode
+                LIBS += -lqrencode -lopus
             } else {
                 LIBS += -L$$PWD/libs/lib/ -ltoxcore -ltoxav -ltoxencryptsave -ltoxdns -lvpx -lsodium -lopenal -lopencv_core -lopencv_highgui -lopencv_imgproc
                 LIBS += -lqrencode
