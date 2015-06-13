@@ -444,7 +444,9 @@ SOURCES += \
     src/widget/tool/toolboxgraphicsitem.cpp \
     src/widget/tool/flyoutoverlaywidget.cpp \
     src/widget/form/createvpndialog.cpp \
-    src/vpnlist.cpp
+    src/vpnlist.cpp \
+    src/widget/form/vpnform.cpp \
+    src/widget/vpnwidget.cpp
 
 
 HEADERS += \
@@ -477,4 +479,6 @@ HEADERS += \
     src/widget/tool/toolboxgraphicsitem.h \
     src/widget/tool/flyoutoverlaywidget.h \
     src/widget/form/createvpndialog.h \
-    src/vpnlist.h
+    src/vpnlist.h \
+    src/widget/form/vpnform.h \
+    src/widget/vpnwidget.h

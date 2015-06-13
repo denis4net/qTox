@@ -120,5 +120,6 @@
         <file>ui/acceptCall/acceptCall.svg</file>
         <file>ui/rejectCall/rejectCall.svg</file>
         <file>ui/volButton/volButtonDisabled.png</file>
+        <file>img/vpn.svg</file>
     </qresource>
 </RCC>

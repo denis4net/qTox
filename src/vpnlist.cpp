@@ -26,12 +26,12 @@ void VPNList::update()
     qDebug() << "building VPNList with " << list.size() << " entries";
     for (const uint32_t toxvpnId: list)
     {
-        VPNEntry entry(toxvpnId);
-        this->append(entry);
+        VPN *entry = new VPN(toxvpnId);
+        this->append(std::shared_ptr<VPN>(entry));
     }
 }
 
-VPNEntry::VPNEntry(uint32_t toxvpnId): _toxvpnId(toxvpnId)
+VPN::VPN(uint32_t toxvpnId): _toxvpnId(toxvpnId)
 {
     Core *core = Nexus::getCore();
 
@@ -40,10 +40,16 @@ VPNEntry::VPNEntry(uint32_t toxvpnId): _toxvpnId(toxvpnId)
 
     for (const uint32_t friendId: core->getVPNFriendsList(toxvpnId))
     {
-        VPNEntry::VPNMember member;
+        VPN::VPNMember member;
         member.friendId = friendId;
         member.ip = core->getVPNFriendIP(toxvpnId, friendId);
         member.online = core->isFriendOnline(friendId);
         _members.append(member);
     }
+}
+
+bool VPN::requestMembership(uint32_t friendId)
+{
+    Core *core = Nexus::getCore();
+    core->requestVPNMembership(_toxvpnId, friendId, 0x0);
 }

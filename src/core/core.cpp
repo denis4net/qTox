@@ -1065,6 +1065,35 @@ QVector<uint32_t> Core::getFriendList() const
     return friends;
 }
 
+uint32_t Core::createVPN(QString subnetAddressString)
+{
+    toxvpn_attach(tox);
+    QStringList arguments = subnetAddressString.split("/");
+    uint8_t prefixLength = arguments.size() > 1 ? arguments[1].toInt() : 24;
+
+    return toxvpn_new(tox, arguments[0].toLatin1().data(), prefixLength);
+}
+
+bool Core::requestVPNMembership(uint32_t toxvpnId, uint32_t friendId, uint8_t flags)
+{
+    return toxvpn_request_membership(tox, toxvpnId, friendId, flags);
+}
+
+bool Core::responseVPNMembership(uint32_t toxvpnId, uint32_t friendId, uint8_t flags)
+{
+    return toxvpn_response_membership(tox, toxvpnId, friendId, flags);
+}
+
+bool Core::acceptVPNMembership(uint32_t toxvpnId, uint32_t friendId)
+{
+    return responseVPNMembership(toxvpnId, friendId, TOXVPN_MEMBERSHIP_ACCEPT);
+}
+
+bool Core::rejectVPNMembership(uint32_t toxvpnId, uint32_t friendId)
+{
+    return responseVPNMembership(toxvpnId, friendId, TOXVPN_MEMBERSHIP_ACCEPT);
+}
+
 QVector<uint32_t> Core::getVPNList() const
 {
     size_t size = toxvpn_get_list_size(tox);
@@ -1085,7 +1114,9 @@ QVector<uint32_t> Core::getVPNFriendsList(uint32_t toxvpnId) const
 
 QString Core::getVPN_IP(uint32_t toxvpnId) const
 {
-    return QString(toxvpn_self_get_ip(tox, toxvpnId));
+    const char *addrStr = toxvpn_self_get_ip(tox, toxvpnId);
+    qDebug() << "Core::getVPN_IP()" << addrStr;
+    return QString(addrStr);
 }
 
 QString Core::getVPNName(uint32_t toxvpnId) const
@@ -1200,15 +1231,6 @@ void Core::createGroup(uint8_t type)
     {
         qWarning() << "Core::createGroup: Unknown type "<<type;
     }
-}
-
-uint32_t Core::createVPN(QString subnetAddressString)
-{
-    toxvpn_attach(tox);
-    QStringList arguments = subnetAddressString.split("/");
-    uint8_t prefixLength = arguments.size() > 1 ? arguments[1].toInt() : 24;
-
-    return toxvpn_new(tox, arguments[0].toLatin1().data(), prefixLength);
 }
 
 bool Core::isGroupAvEnabled(int groupId)

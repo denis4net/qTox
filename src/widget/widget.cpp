@@ -40,6 +40,8 @@
 #include "src/widget/gui.h"
 #include "src/offlinemsgengine.h"
 #include "src/widget/form/createvpndialog.h"
+#include "vpnwidget.h"
+
 #include <cassert>
 #include <QMessageBox>
 #include <QDebug>
@@ -782,6 +784,7 @@ void Widget::onChatroomWidgetClicked(GenericChatroomWidget *widget)
 
 }
 
+
 void Widget::onFriendMessageReceived(int friendId, const QString& message, bool isAction)
 {
     Friend* f = FriendList::findFriend(friendId);
@@ -1091,6 +1094,31 @@ Group *Widget::createGroup(int groupId)
     connect(newgroup->getChatForm(), &GroupChatForm::groupTitleChanged, core, &Core::changeGroupTitle);
     searchContacts();
     return newgroup;
+}
+
+void Widget::updateVPN()
+{
+    vpnList->update();
+    QVBoxLayout* vpnLayout = contactListWidget->getVPNLayout();
+
+    QLayoutItem *lItem = vpnLayout->takeAt(0);
+
+    do
+    {
+        lItem = vpnLayout->takeAt(0);
+        if (lItem)
+            delete lItem;
+
+    } while(lItem);
+
+    for (VPN::Ptr vpn: *vpnList)
+    {
+        VPNWidget *vpnWidget = new VPNWidget(vpn);
+        vpnLayout->addWidget(vpnWidget);
+        vpnWidget->setVisible(true);
+    }
+
+    searchContacts();
 }
 
 void Widget::onEmptyGroupCreated(int groupId)
@@ -1490,16 +1518,6 @@ void Widget::hideGroups(QString searchString, bool hideAll)
     }
 }
 
-void Widget::updateVPN()
-{
-    vpnList->update();
-    QVBoxLayout* vpnLayout = contactListWidget->getVPNLayout();
-
-    for (const VPNEntry &entry: *vpnList)
-    {
-        vpnLayout->addWidget(new QLabel(entry.getIP()));
-    }
-}
 
 void Widget::setActiveToolMenuButton(ActiveToolMenuButton newActiveButton)
 {

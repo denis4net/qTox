@@ -3,10 +3,13 @@
 
 #include <QList>
 #include <QString>
+#include <memory>
 
-class VPNEntry
+class VPN
 {
 public:
+    typedef std::shared_ptr<VPN> Ptr;
+
     struct VPNMember {
     public:
         QString ip;
@@ -14,12 +17,13 @@ public:
         bool online;
     };
 
-    VPNEntry(uint32_t toxvpnId);
+    VPN(uint32_t toxvpnId);
     const QList<VPNMember> &getMembers() const { return _members; }
     QString getName() const { return _name; }
     QString getIP() const { return _ip; }
+    bool requestMembership(uint32_t friendId);
 private:
-    VPNEntry();
+    VPN();
 
     QString _name;
     QString _ip;
@@ -28,7 +32,7 @@ private:
     QList<VPNMember> _members;
 };
 
-class VPNList: public QList<VPNEntry>
+class VPNList: public QList< std::shared_ptr<VPN> >
 {
 public:
     VPNList();

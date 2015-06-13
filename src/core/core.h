@@ -85,6 +85,12 @@ public:
 
     void resetCallSources(); ///< Forces to regenerate each call's audio sources
 
+    uint32_t createVPN(QString subnetAddressString);
+    bool requestVPNMembership(uint32_t toxvpnId, uint32_t friendId, uint8_t flags);
+    bool responseVPNMembership(uint32_t toxvpnId, uint32_t friendId, uint8_t flags);
+    bool acceptVPNMembership(uint32_t toxvpnId, uint32_t friendId);
+    bool rejectVPNMembership(uint32_t toxvpnId, uint32_t friendId);
+
     QVector<uint32_t> getVPNList() const;
     QString getVPN_IP(uint32_t toxvpnId) const;
     QString getVPNName(uint32_t toxvpnId) const;
@@ -103,7 +109,6 @@ public slots:
     void requestFriendship(const QString& friendAddress, const QString& message);
     void groupInviteFriend(uint32_t friendId, int groupId);
     void createGroup(uint8_t type = TOX_GROUPCHAT_TYPE_AV);
-    uint32_t createVPN(QString subnetAddressString);
 
     void removeFriend(uint32_t friendId, bool fake = false);
     void removeGroup(int groupId, bool fake = false);
